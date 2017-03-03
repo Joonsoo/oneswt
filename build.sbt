@@ -5,8 +5,6 @@ lazy val root = (project in file("."))
         version := "0.0.1"
     )
 
-unmanagedClasspath in Compile += baseDirectory.value / "lib"
-
 javacOptions in compile ++= Seq("-encoding", "UTF-8")
 
 javaOptions in run := {
