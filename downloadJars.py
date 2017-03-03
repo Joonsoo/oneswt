@@ -67,6 +67,11 @@ try:
 except:
     pass
 
+try:
+    os.mkdir("swt")
+except:
+    pass
+
 for f in files:
     (url, fileNameNoZip) = f
     fileName = "tmp/" + fileNameNoZip + ".zip"
@@ -80,8 +85,10 @@ for f in files:
     print("Extracting file %s" % fileName)
     with ZipFile(fileName) as myzip:
         myzip.extract("swt.jar", "tmp")
-        shutil.move("tmp/swt.jar", "lib/" + fileNameNoZip + ".jar")
+        shutil.move("tmp/swt.jar", "swt/" + fileNameNoZip + ".jar")
         myzip.extract("swt-debug.jar", "tmp")
-        shutil.move("tmp/swt-debug.jar", "lib/" + fileNameNoZip + "-debug.jar")
+        shutil.move("tmp/swt-debug.jar", "swt/" + fileNameNoZip + "-debug.jar")
+        myzip.extract("src.zip", "tmp")
+        shutil.move("tmp/src.zip", "swt/" + fileNameNoZip + "-sources.jar")
 
 print("** You may want to delete tmp folder")

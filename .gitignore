@@ -18,9 +18,11 @@ project/target/
 
 # IntelliJ IDEA specific
 .idea
+oneswt.iml
 
 **/.DS_Store
 samples
 bin
+build
 tmp
 
