@@ -22,7 +22,7 @@ public class SwtLoader {
                                         ""; // throw new RuntimeException("Unknown OS name: "+osName)
 
         String swtFileNameArchPart = osArch.contains("64") ? "x86_64" : "x86";
-        String swtFileName = "swt-" + swtVersion + "-" + swtFileNameOsPart + "-" + swtFileNameArchPart + ".jar";
+        String swtFileName = "swt-" + swtVersion + "-" + swtFileNameOsPart + "-" + swtFileNameArchPart + "-" + swtVersion + ".jar";
 
         try {
             URLClassLoader classLoader = (URLClassLoader) getClass().getClassLoader();

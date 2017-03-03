@@ -16,8 +16,8 @@ cd bin
 jar cf ../$DESTPATH .
 
 cd ../swt
-jar uf ../$DESTPATH ./*-x86.jar
-jar uf ../$DESTPATH ./*-x86_64.jar
+# jar uf ../$DESTPATH ./*-x86.jar
+# jar uf ../$DESTPATH ./*-x86_64.jar
 
 cd ..
 
@@ -25,11 +25,14 @@ MAVENPATH=maven/com/giyeok/oneswt/com.giyeok.oneswt/$VERSION_NUM
 
 mkdir -p $MAVENPATH
 cp $DESTPATH $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.jar
-tar czf $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM-sources.jar src
 cp src/oneswt_pom.xml $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.pom
 POM_PATH=$MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.pom
 sed -i.bak "s/VERSION_NUM/${VERSION_NUM}/g" $POM_PATH
 rm $POM_PATH.bak
+
+cd src/main/java
+tar czf ../../../$MAVENPATH/com.giyeok.oneswt-$VERSION_NUM-sources.jar .
+cd ../../..
 
 SWT_MAVENBASE=maven/org/eclipse/swt
 
