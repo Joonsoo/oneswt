@@ -24,9 +24,12 @@ cd ..
 MAVENPATH=maven/com/giyeok/oneswt/com.giyeok.oneswt/$VERSION_NUM
 
 mkdir -p $MAVENPATH
-mv $DESTPATH $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.jar
+cp $DESTPATH $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.jar
+tar czf $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM-sources.jar src
 cp src/oneswt_pom.xml $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.pom
-sed -i.bak "s/VERSION_NUM/${VERSION_NUM}/g" $MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.pom
+POM_PATH=$MAVENPATH/com.giyeok.oneswt-$VERSION_NUM.pom
+sed -i.bak "s/VERSION_NUM/${VERSION_NUM}/g" $POM_PATH
+rm $POM_PATH.bak
 
 SWT_MAVENBASE=maven/org/eclipse/swt
 
@@ -43,4 +46,5 @@ POM_PATH=../$SWT_MAVENBASE/$ARTIFACT_NAME/$VERSION_NUM/$ARTIFACT_NAME-$VERSION_N
 cp ../src/swt_pom.xml $POM_PATH
 sed -i.bak "s/VERSION_NUM/${VERSION_NUM}/g" $POM_PATH
 sed -i.bak "s/ARTIFACT_NAME/${ARTIFACT_NAME}/g" $POM_PATH
+rm $POM_PATH.bak
 done
