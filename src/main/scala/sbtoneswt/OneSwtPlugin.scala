@@ -60,7 +60,7 @@ object OneSwtPlugin extends AutoPlugin {
 
     import autoImport._
 
-    lazy val archDependentSwt = autoImport.archDependentSwt
+    lazy val archDependentSwt: SettingKey[ModuleID] = autoImport.archDependentSwt
 
     override def requires = sbt.plugins.JvmPlugin
 
