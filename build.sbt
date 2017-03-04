@@ -4,7 +4,7 @@ lazy val root = (project in file(".")).
         sbtPlugin := true,
         organization := "com.giyeok",
         name := "sbt-oneswt",
-        version := "0.0.1",
-        scalaVersion := "2.12.1",
+        version := "4.6.2",
         description := "create fat jar with cross-platform swt jars"
     )
+    .settings(addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.4"))

@@ -11,6 +11,7 @@ import java.util.jar.JarOutputStream
 import java.util.jar.Manifest
 import java.util.zip.ZipEntry
 import sbt.Def
+import sbt.Def
 import sbt.Keys._
 import sbt._
 
@@ -29,19 +30,26 @@ object OneSwtPlugin extends AutoPlugin {
             oneswtAssembly := OneSwt.assemblyTask(oneswtAssembly).value,
             oneswtAssemblyJarName in oneswtAssembly := ((oneswtAssemblyJarName in oneswtAssembly) or (oneswtAssemblyDefaultJarName in oneswtAssembly)).value,
             oneswtAssemblyDefaultJarName in oneswtAssembly := { name.value + "-oneswt-assembly-" + version.value + ".jar" },
-            oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value }
+            oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value },
+            target in oneswtAssembly := crossTarget.value
         )
     }
+    import autoImport._
+
     override def requires = sbt.plugins.JvmPlugin
 
     override def trigger: PluginTrigger = allRequirements
+
+    override lazy val projectSettings: Seq[Def.Setting[_]] = baseOneSwtSettings
 }
 
 object OneSwt {
     import OneSwtPlugin.autoImport._
 
     def assemblyTask(key: TaskKey[File]): Def.Initialize[Task[File]] = Def.task {
-        val assemblyJar: File = ??? // sbtassembly
+        val assemblyJar = (sbtassembly.AssemblyKeys.assembly in oneswtAssembly).value
+        // println(assemblyJar.getCanonicalPath)
+        // println(s"out jar to: ${(oneswtAssemblyOutputPath in key).value}")
         val swtVersion = (version in key).value
         OneSwt(
             out = (oneswtAssemblyOutputPath in key).value,
@@ -57,7 +65,7 @@ object OneSwt {
         var bytesRead = in.read(bytes)
 
         while (bytesRead >= 0) {
-            out.write(bytes)
+            out.write(bytes, 0, bytesRead)
             bytesRead = in.read(bytes)
         }
     }
@@ -76,10 +84,10 @@ object OneSwt {
         // 기존 manifest에서 MAIN_CLASS만 변경
         if (assemblyManifest.getMainAttributes.containsKey(Attributes.Name.MAIN_CLASS)) {
             val originalMainClassName = assemblyManifest.getMainAttributes.get(Attributes.Name.MAIN_CLASS)
-            outManifest.getMainAttributes.put(Attributes.Name.MAIN_CLASS, "com.giyeok.oneswt.oneswt.SwtLoader")
-            outManifest.getMainAttributes.put("OneSwt-Original-Main-Class", originalMainClassName)
+            outManifest.getMainAttributes.put(Attributes.Name.MAIN_CLASS, "com.giyeok.oneswt.SwtLoader")
+            outManifest.getMainAttributes.put(new Attributes.Name("OneSwt-Original-Main-Class"), originalMainClassName)
         }
-        outManifest.getMainAttributes.put("OneSwt-Swt-Version: ", swtVersion)
+        outManifest.getMainAttributes.put(new Attributes.Name("OneSwt-SWT-Version"), swtVersion)
 
         // 새 jar 생성
         val outStream = new JarOutputStream(new FileOutputStream(out), outManifest)
@@ -94,7 +102,9 @@ object OneSwt {
         val assemblyJarEntryIterator = assemblyJar.entries()
         while (assemblyJarEntryIterator.hasMoreElements) {
             val entry = assemblyJarEntryIterator.nextElement()
-            if (!(entry.getName startsWith "com/eclipse/swt/")) {
+            val entryName = entry.getName
+            println(entryName)
+            if (!(entryName startsWith "com/eclipse/swt/") && !(entryName startsWith "swt") && (entryName != "META-INF/MANIFEST.MF")) {
                 copyFile(entry, assemblyJar.getInputStream(entry))
             }
         }
@@ -108,7 +118,7 @@ object OneSwt {
         // TODO - dependency manager에서 "com.giyeok.oneswt" % "swt-**" % swtVersion 에 해당하는 jar얻어오기
 
         // TODO - SwtLoader 클래스 넣기
-        addFile("/com/giyeok/oneswt/SwtLoader.class", ???)
+        // addFile("/com/giyeok/oneswt/SwtLoader.class", ???)
 
         outStream.close()
 
