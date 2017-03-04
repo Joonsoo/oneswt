@@ -1,6 +1,6 @@
 VERSION_NUM=4.6.2
 
-rm -rf bin build maven
+rm -rf bin build maven ../maven
 
 javac src/main/java/com/giyeok/oneswt/SwtLoader.java -cp lib
 
@@ -51,3 +51,7 @@ sed -i.bak "s/VERSION_NUM/${VERSION_NUM}/g" $POM_PATH
 sed -i.bak "s/ARTIFACT_NAME/${ARTIFACT_NAME}/g" $POM_PATH
 rm $POM_PATH.bak
 done
+
+echo DONE
+cd ..
+mv maven ..

@@ -26,7 +26,7 @@ archs = [
     # ["gtk-solaris", "x86_64"],
 ]
 
-url = "http://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/R-4.6.2-201611241400/swt-4.6.2-cocoa-macosx-x86_64.zip"
+# url = "http://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/R-4.6.2-201611241400/swt-4.6.2-cocoa-macosx-x86_64.zip"
 
 def readable(size):
     units = ['', 'K', 'M', 'G', 'T']
