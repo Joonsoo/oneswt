@@ -41,7 +41,9 @@ object OneSwtPlugin extends AutoPlugin {
             archDependentSwt := {
                 val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
                 println("oneswtAssembly.version=" + (oneswtVersion in oneswtAssembly).value)
-                moduleIdOf(archs.find(_._1(name, arch)).get._2, (oneswtVersion in oneswtAssembly).value)
+                val archName = archs.find(_._1(name, arch)).get._2
+                println(s"$name, $arch -> $archName")
+                moduleIdOf(archName, (oneswtVersion in oneswtAssembly).value)
             }
         )
     }
@@ -50,13 +52,15 @@ object OneSwtPlugin extends AutoPlugin {
         ({ (name, arch) => name == "Linux" && arch == "amd64" || arch == "x86_64" }, "gtk-linux-x86_64"),
         ({ (name, arch) => name == "Linux" }, "gtk-linux-x86"),
         ({ (name, arch) => name == "Mac OS X" }, "cocoa-macosx-x86_64"),
-        ({ (name, arch) => name.startsWith("Windows") && arch == "amd64" }, "win32-win32-x86"),
-        ({ (name, arch) => name.startsWith("Windows") }, "win32-win32-x86_64")
+        ({ (name, arch) => name.startsWith("Windows") && arch == "amd64" }, "win32-win32-x86_64"),
+        ({ (name, arch) => name.startsWith("Windows") }, "win32-win32-x86")
     )
     def moduleIdOf(archName: String, swtVersion: String): ModuleID =
         "org.eclipse.swt" % s"swt-$swtVersion-$archName" % swtVersion
 
     import autoImport._
+
+    lazy val archDependentSwt = autoImport.archDependentSwt
 
     override def requires = sbt.plugins.JvmPlugin
 
