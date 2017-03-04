@@ -26,6 +26,7 @@ object OneSwtPlugin extends AutoPlugin {
         val oneswtAssemblyDefaultJarName: TaskKey[String] = taskKey[String]("jar name")
         val oneswtAssemblyOutputPath: TaskKey[File] = taskKey[File]("output path")
 
+        val oneswtVersion: SettingKey[String] = settingKey[String]("swt version to use")
         val archDependentSwt: SettingKey[ModuleID] = settingKey[ModuleID]("SWT module for current architecture - use it for development")
 
         // default values for the tasks and settings
@@ -36,10 +37,11 @@ object OneSwtPlugin extends AutoPlugin {
             oneswtAssemblyDefaultJarName in oneswtAssembly := { name.value + "-oneswt-assembly-" + version.value + ".jar" },
             oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value },
             target in oneswtAssembly := crossTarget.value,
+            oneswtVersion in oneswtAssembly := "4.6.2",
             archDependentSwt := {
                 val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
-                println("oneswtAssembly.version=" + (version in oneswtAssembly).value)
-                moduleIdOf(archs.find(_._1(name, arch)).get._2, (version in oneswtAssembly).value)
+                println("oneswtAssembly.version=" + (oneswtVersion in oneswtAssembly).value)
+                moduleIdOf(archs.find(_._1(name, arch)).get._2, (oneswtVersion in oneswtAssembly).value)
             }
         )
     }
@@ -71,7 +73,7 @@ object OneSwt {
         val assemblyJar = (sbtassembly.AssemblyKeys.assembly in oneswtAssembly).value
         // println(assemblyJar.getCanonicalPath)
         // println(s"out jar to: ${(oneswtAssemblyOutputPath in key).value}")
-        val swtVersion = (version in key).value
+        val swtVersion = (oneswtVersion in key).value
         // val swtResolver = (oneswtResolver in key).value
 
         val swtModules: Seq[(String, File)] =
