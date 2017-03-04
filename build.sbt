@@ -5,5 +5,6 @@ lazy val root = (project in file(".")).
         organization := "com.giyeok",
         name := "sbt-oneswt",
         version := "0.0.1",
+        scalaVersion := "2.12.1",
         description := "create fat jar with cross-platform swt jars"
     )
