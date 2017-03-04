@@ -26,6 +26,8 @@ object OneSwtPlugin extends AutoPlugin {
         val oneswtAssemblyDefaultJarName: TaskKey[String] = taskKey[String]("jar name")
         val oneswtAssemblyOutputPath: TaskKey[File] = taskKey[File]("output path")
 
+        val archDependentSwt: SettingKey[ModuleID] = settingKey[ModuleID]("SWT module for current architecture - use it for development")
+
         // default values for the tasks and settings
         lazy val baseOneSwtSettings: Seq[Def.Setting[_]] = Seq(
             oneswtAssembly := OneSwt.assemblyTask(oneswtAssembly).value,
@@ -33,9 +35,25 @@ object OneSwtPlugin extends AutoPlugin {
             oneswtAssemblyJarName in oneswtAssembly := ((oneswtAssemblyJarName in oneswtAssembly) or (oneswtAssemblyDefaultJarName in oneswtAssembly)).value,
             oneswtAssemblyDefaultJarName in oneswtAssembly := { name.value + "-oneswt-assembly-" + version.value + ".jar" },
             oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value },
-            target in oneswtAssembly := crossTarget.value
+            target in oneswtAssembly := crossTarget.value,
+            archDependentSwt := {
+                val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
+                println("oneswtAssembly.version=" + (version in oneswtAssembly).value)
+                moduleIdOf(archs.find(_._1(name, arch)).get._2, (version in oneswtAssembly).value)
+            }
         )
     }
+
+    val archs: Seq[((String, String) => Boolean, String)] = Seq(
+        ({ (name, arch) => name == "Linux" && arch == "amd64" || arch == "x86_64" }, "gtk-linux-x86_64"),
+        ({ (name, arch) => name == "Linux" }, "gtk-linux-x86"),
+        ({ (name, arch) => name == "Mac OS X" }, "cocoa-macosx-x86_64"),
+        ({ (name, arch) => name.startsWith("Windows") && arch == "amd64" }, "win32-win32-x86"),
+        ({ (name, arch) => name.startsWith("Windows") }, "win32-win32-x86_64")
+    )
+    def moduleIdOf(archName: String, swtVersion: String): ModuleID =
+        "org.eclipse.swt" % s"swt-$swtVersion-$archName" % swtVersion
+
     import autoImport._
 
     override def requires = sbt.plugins.JvmPlugin
@@ -49,21 +67,19 @@ object OneSwt {
     import OneSwtPlugin.autoImport._
 
     def assemblyTask(key: TaskKey[File]): Def.Initialize[Task[File]] = Def.task {
+        // TODO 가능하면 assembly할 때 아예 swt 관련 jar는 뺄 수 없을까
         val assemblyJar = (sbtassembly.AssemblyKeys.assembly in oneswtAssembly).value
         // println(assemblyJar.getCanonicalPath)
         // println(s"out jar to: ${(oneswtAssemblyOutputPath in key).value}")
         val swtVersion = (version in key).value
-        val swtResolver = (oneswtResolver in key).value
+        // val swtResolver = (oneswtResolver in key).value
 
-        val archs = Seq("cocoa-macosx-x86_64", "gtk-linux-x86", "gtk-linux-x86_64", "win32-win32-x86", "win32-win32-x86_64")
-        val swtModules: Seq[(String, File)] = archs map { arch =>
-            val artifactName = s"swt-$swtVersion-$arch"
-            val fileName = artifactName + ".jar"
-
-            val moduleId = "org.eclipse.swt" % artifactName % swtVersion
-            // TODO swtResolver에서 moduleId에 해당하는 dependency들 받아와서 실제 파일 위치 지정
-            (fileName, ???)
-        }
+        val swtModules: Seq[(String, File)] =
+            OneSwtPlugin.archs map { _._2 } map { archName =>
+                val moduleId = OneSwtPlugin.moduleIdOf(archName, swtVersion)
+                val fileName = moduleId.name + "-" + moduleId.revision + ".jar"
+                (fileName, ???)
+            }
 
         OneSwt(
             out = (oneswtAssemblyOutputPath in key).value,
@@ -118,7 +134,7 @@ object OneSwt {
         while (assemblyJarEntryIterator.hasMoreElements) {
             val entry = assemblyJarEntryIterator.nextElement()
             val entryName = entry.getName
-            println(entryName)
+            // println(entryName)
             if (!(entryName startsWith "com/eclipse/swt/") && !(entryName startsWith "swt") && (entryName != "META-INF/MANIFEST.MF")) {
                 copyFile(entry, assemblyJar.getInputStream(entry))
             }
