@@ -32,7 +32,7 @@ object OneSwtPlugin extends AutoPlugin {
         // default values for the tasks and settings
         lazy val baseOneSwtSettings: Seq[Def.Setting[_]] = Seq(
             oneswtAssembly := OneSwt.assemblyTask(oneswtAssembly).value,
-            oneswtResolver in oneswtAssembly := "Local Maven Repository" at "file:///C:/home/joonsoo/workspace/oneswt/maven",
+            oneswtResolver in oneswtAssembly := "OneSWT Repository" at "http://joonsoo.github.io/oneswt/maven",
             oneswtAssemblyJarName in oneswtAssembly := ((oneswtAssemblyJarName in oneswtAssembly) or (oneswtAssemblyDefaultJarName in oneswtAssembly)).value,
             oneswtAssemblyDefaultJarName in oneswtAssembly := { name.value + "-oneswt-assembly-" + version.value + ".jar" },
             oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value },
@@ -57,6 +57,8 @@ object OneSwtPlugin extends AutoPlugin {
         "org.eclipse.swt" % s"swt-$swtVersion-$archName" % swtVersion
 
     import autoImport._
+
+    lazy val archDependentSwt: SettingKey[ModuleID] = autoImport.archDependentSwt
 
     override def requires = sbt.plugins.JvmPlugin
 
