@@ -45,7 +45,7 @@ object OneSwtPlugin extends AutoPlugin {
                 println(s"$name, $arch -> $archName")
                 moduleIdOf(archName, (oneswtVersion in oneswtAssembly).value)
             },
-            resolvers in ThisBuild += oneswtResolver.value
+            resolvers += (oneswtResolver in oneswtAssembly).value
         )
     }
 
