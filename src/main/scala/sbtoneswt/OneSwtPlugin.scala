@@ -50,7 +50,7 @@ object OneSwtPlugin extends AutoPlugin {
     }
 
     val archs: Seq[((String, String) => Boolean, String)] = Seq(
-        ({ (name, arch) => name == "Linux" && arch == "amd64" || arch == "x86_64" }, "gtk-linux-x86_64"),
+        ({ (name, arch) => name == "Linux" && (arch == "amd64" || arch == "x86_64") }, "gtk-linux-x86_64"),
         ({ (name, arch) => name == "Linux" }, "gtk-linux-x86"),
         ({ (name, arch) => name == "Mac OS X" }, "cocoa-macosx-x86_64"),
         ({ (name, arch) => name.startsWith("Windows") && arch == "amd64" }, "win32-win32-x86"),
