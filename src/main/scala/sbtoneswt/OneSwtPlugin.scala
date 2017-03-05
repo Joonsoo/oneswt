@@ -20,7 +20,7 @@ import sbt._
 object OneSwtPlugin extends AutoPlugin {
     object autoImport {
         val oneswtAssembly: TaskKey[File] = taskKey[File]("Create a fat jar including swt.")
-        val oneswtResolver: TaskKey[Resolver] = taskKey[Resolver]("Where to resolve swt jars")
+        val oneswtResolver: SettingKey[Resolver] = settingKey[Resolver]("Where to resolve swt jars")
 
         val oneswtAssemblyJarName: TaskKey[String] = taskKey[String]("jar name")
         val oneswtAssemblyDefaultJarName: TaskKey[String] = taskKey[String]("jar name")
@@ -45,7 +45,7 @@ object OneSwtPlugin extends AutoPlugin {
                 println(s"$name, $arch -> $archName")
                 moduleIdOf(archName, (oneswtVersion in oneswtAssembly).value)
             },
-            resolver += oneswtResolver
+            resolvers += (oneswtResolver in oneswtAssembly).value
         )
     }
 
@@ -53,8 +53,8 @@ object OneSwtPlugin extends AutoPlugin {
         ({ (name, arch) => name == "Linux" && (arch == "amd64" || arch == "x86_64") }, "gtk-linux-x86_64"),
         ({ (name, arch) => name == "Linux" }, "gtk-linux-x86"),
         ({ (name, arch) => name == "Mac OS X" }, "cocoa-macosx-x86_64"),
-        ({ (name, arch) => name.startsWith("Windows") && arch == "amd64" }, "win32-win32-x86"),
-        ({ (name, arch) => name.startsWith("Windows") }, "win32-win32-x86_64")
+        ({ (name, arch) => name.startsWith("Windows") && arch == "amd64" }, "win32-win32-x86_64"),
+        ({ (name, arch) => name.startsWith("Windows") }, "win32-win32-x86")
     )
     def moduleIdOf(archName: String, swtVersion: String): ModuleID =
         "org.eclipse.swt" % s"swt-$swtVersion-$archName" % swtVersion
