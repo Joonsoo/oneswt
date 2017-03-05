@@ -40,8 +40,10 @@ object OneSwtPlugin extends AutoPlugin {
             oneswtVersion in oneswtAssembly := "4.6.2",
             archDependentSwt := {
                 val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
+                val archName = archs.find(_._1(name, arch)).get._2
                 println("oneswtAssembly.version=" + (oneswtVersion in oneswtAssembly).value)
-                moduleIdOf(archs.find(_._1(name, arch)).get._2, (oneswtVersion in oneswtAssembly).value)
+                println(s"$name, $arch -> $archName")
+                moduleIdOf(archName, (oneswtVersion in oneswtAssembly).value)
             },
             resolver += oneswtResolver
         )
