@@ -20,7 +20,7 @@ import sbt._
 object OneSwtPlugin extends AutoPlugin {
     object autoImport {
         val oneswtAssembly: TaskKey[File] = taskKey[File]("Create a fat jar including swt.")
-        val oneswtResolver: TaskKey[Resolver] = taskKey[Resolver]("Where to resolve swt jars")
+        val oneswtResolver: SettingKey[Resolver] = settingKey[Resolver]("Where to resolve swt jars")
 
         val oneswtAssemblyJarName: TaskKey[String] = taskKey[String]("jar name")
         val oneswtAssemblyDefaultJarName: TaskKey[String] = taskKey[String]("jar name")
