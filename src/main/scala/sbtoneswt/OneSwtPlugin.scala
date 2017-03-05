@@ -42,7 +42,8 @@ object OneSwtPlugin extends AutoPlugin {
                 val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
                 println("oneswtAssembly.version=" + (oneswtVersion in oneswtAssembly).value)
                 moduleIdOf(archs.find(_._1(name, arch)).get._2, (oneswtVersion in oneswtAssembly).value)
-            }
+            },
+            resolver += oneswtResolver
         )
     }
 
