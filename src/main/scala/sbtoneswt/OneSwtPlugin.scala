@@ -32,7 +32,7 @@ object OneSwtPlugin extends AutoPlugin {
         // default values for the tasks and settings
         lazy val baseOneSwtSettings: Seq[Def.Setting[_]] = Seq(
             oneswtAssembly := OneSwt.assemblyTask(oneswtAssembly).value,
-            oneswtResolver in oneswtAssembly := "Local Maven Repository" at "file:///C:/home/joonsoo/workspace/oneswt/maven",
+            oneswtResolver in oneswtAssembly := "OneSWT Repository" at "http://joonsoo.github.io/oneswt/maven",
             oneswtAssemblyJarName in oneswtAssembly := ((oneswtAssemblyJarName in oneswtAssembly) or (oneswtAssemblyDefaultJarName in oneswtAssembly)).value,
             oneswtAssemblyDefaultJarName in oneswtAssembly := { name.value + "-oneswt-assembly-" + version.value + ".jar" },
             oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value },
@@ -40,11 +40,12 @@ object OneSwtPlugin extends AutoPlugin {
             oneswtVersion in oneswtAssembly := "4.6.2",
             archDependentSwt := {
                 val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
-                println("oneswtAssembly.version=" + (oneswtVersion in oneswtAssembly).value)
                 val archName = archs.find(_._1(name, arch)).get._2
+                println("oneswtAssembly.version=" + (oneswtVersion in oneswtAssembly).value)
                 println(s"$name, $arch -> $archName")
                 moduleIdOf(archName, (oneswtVersion in oneswtAssembly).value)
-            }
+            },
+            resolvers += oneswtResolver
         )
     }
 
