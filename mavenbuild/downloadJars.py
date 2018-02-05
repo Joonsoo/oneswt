@@ -3,8 +3,8 @@ from zipfile import ZipFile
 import os
 import shutil
 
-versionNum = "4.6.2"
-releaseNum = "R-4.6.2-201611241400"
+versionNum = "4.7.2"
+releaseNum = "R-4.7.2-201711300510"
 
 archs = [
     ["win32-win32", "x86"],
@@ -26,7 +26,7 @@ archs = [
     # ["gtk-solaris", "x86_64"],
 ]
 
-# url = "http://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/R-4.6.2-201611241400/swt-4.6.2-cocoa-macosx-x86_64.zip"
+# url = "ftp://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/R-4.6.2-201611241400/swt-4.6.2-cocoa-macosx-x86_64.zip"
 
 def readable(size):
     units = ['', 'K', 'M', 'G', 'T']
@@ -57,7 +57,7 @@ def download(url, fileName):
 
 files = [
     [
-        "http://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/%s/swt-%s-%s-%s.zip" % (releaseNum, versionNum, archName, archType),
+        "ftp://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/%s/swt-%s-%s-%s.zip" % (releaseNum, versionNum, archName, archType),
         "swt-%s-%s-%s" % (versionNum, archName, archType)
     ] for (archName, archType) in archs
 ]

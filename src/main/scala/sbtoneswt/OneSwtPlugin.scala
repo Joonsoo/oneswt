@@ -32,12 +32,12 @@ object OneSwtPlugin extends AutoPlugin {
         // default values for the tasks and settings
         lazy val baseOneSwtSettings: Seq[Def.Setting[_]] = Seq(
             oneswtAssembly := OneSwt.assemblyTask(oneswtAssembly).value,
-            oneswtResolver in oneswtAssembly := "OneSWT Repository" at "http://joonsoo.github.io/oneswt/maven",
+            oneswtResolver in oneswtAssembly := Resolver.bintrayRepo("joonsoo", "oneswt"),
             oneswtAssemblyJarName in oneswtAssembly := ((oneswtAssemblyJarName in oneswtAssembly) or (oneswtAssemblyDefaultJarName in oneswtAssembly)).value,
             oneswtAssemblyDefaultJarName in oneswtAssembly := { name.value + "-oneswt-assembly-" + version.value + ".jar" },
             oneswtAssemblyOutputPath in oneswtAssembly := { (target in oneswtAssembly).value / (oneswtAssemblyJarName in oneswtAssembly).value },
             target in oneswtAssembly := crossTarget.value,
-            oneswtVersion in oneswtAssembly := "4.6.2",
+            oneswtVersion in oneswtAssembly := "4.7.2",
             archDependentSwt := {
                 val (name, arch) = (sys.props("os.name"), sys.props("os.arch"))
                 val archName = archs.find(_._1(name, arch)).get._2
@@ -57,7 +57,7 @@ object OneSwtPlugin extends AutoPlugin {
         ({ (name, arch) => name.startsWith("Windows") }, "win32-win32-x86")
     )
     def moduleIdOf(archName: String, swtVersion: String): ModuleID =
-        "org.eclipse.swt" % s"swt-$swtVersion-$archName" % swtVersion
+        "org.eclipse.swt" % s"swt-$archName" % swtVersion
 
     import autoImport._
 

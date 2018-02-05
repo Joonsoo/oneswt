@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>org.eclipse.swt</groupId>
+  <artifactId>swt-cocoa-macosx-x86_64</artifactId>
+  <version>4.7.2</version>
+  <packaging>jar</packaging>
+
+ <distributionManagement>
+    <repository>
+       <id>bintray-joonsoo-oneswt</id>
+       <name>joonsoo-oneswt</name>
+       <url>https://api.bintray.com/maven/joonsoo/oneswt/swt-cocoa-macosx-x86_64/;publish=1</url>
+    </repository>
+ </distributionManagement>
+</project>
+
+
+<!--
+mvn deploy:deploy-file -DpomFile=pom.xml -Dfile=swt-4.7.2-cocoa-macosx-x86_64.jar -Dsources=swt-4.7.2-cocoa-macosx-x86_64-sources.jar -DrepositoryId=bintray-joonsoo-oneswt -Durl=https://api.bintray.com/maven/joonsoo/oneswt/swt-cocoa-macosx-x86_64/
+-->
