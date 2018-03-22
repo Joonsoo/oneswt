@@ -10,10 +10,10 @@ SWT jars deployed in bintray: https://bintray.com/joonsoo/oneswt
 HOW TO USE
 ----------
 
-Add to `project/plugins.sbt`:
+Using SBT version 1.1.1, add to `project/plugins.sbt`:
 
 	resolvers += Resolver.bintrayIvyRepo("joonsoo", "sbt-plugins")
-	addSbtPlugin("com.giyeok.oneswt" % "sbt-oneswt" % "0.0.3")
+	addSbtPlugin("com.giyeok.oneswt" % "sbt-oneswt" % "0.0.4")
 
 
 To use architecture-dependent SWT dependency, add to `build.sbt`:
