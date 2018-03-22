@@ -7,10 +7,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class SwtLoader {
-    // jars from http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.2-201611241400/
-    // mirror: http://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/R-4.6.2-201611241400/
+    // jars from http://download.eclipse.org/eclipse/downloads/drops4/R-4.7.2-201711300510/
+    // mirror: http://ftp.kaist.ac.kr/eclipse/eclipse/downloads/drops4/R-4.7.2-201711300510/
 
-    public static final String swtVersion = "4.6.2";
+    // TODO swtVersion도 manifest에서 얻어오기
+    public static final String swtVersion = "4.7.2";
 
     public void loadSwt() {
         String osName = System.getProperty("os.name").toLowerCase();
